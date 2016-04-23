@@ -6,7 +6,7 @@ import urllib2
 hurl='http://175game.com/'
 		
 class queue(object):
-	def init(self):
+	def __init__(self):
 		self.head=-1
 		self.tail=-1
 		self.url={}
@@ -33,7 +33,6 @@ def GetPage(url):
 
 def main(targeturl):
 	qurl=queue()
-	qurl.init()
 	qurl.enqueue(targeturl)
 
 	regsrc=r'<img src=["]/(.*?.[jpg,png])["]'
