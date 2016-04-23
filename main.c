@@ -5,22 +5,23 @@ import urllib
 import urllib2
 hurl='http://175game.com/'
 		
-class strack(object):
+class queue(object):
 	def init(self):
-		self.point=-1
+		self.head=-1
+		self.tail=-1
 		self.url={}
 		self.allurl={}
-	def pop(self):
-		if self.point >= 0:
-			var = self.url[self.point]
-		        self.point = self.point - 1
-			return var 
-		return None
-	def push(self,var):
+
+	def dequeue(self):
+		self.head=self.head+1
+		var=self.url.get(self.head)
+		return var
+
+	def enqueue(self,var):
 		if self.allurl.get(var) == None:
-			self.point = self.point + 1
-			self.url[self.point] = var		
 			self.allurl[var] = 1
+			self.tail=self.tail+1
+			self.url[self.tail]=var
 
 def GetPage(url):
 	try:
@@ -31,9 +32,9 @@ def GetPage(url):
 	return content
 
 def main(targeturl):
-	surl=strack()
-	surl.init()
-	surl.push(targeturl)
+	qurl=queue()
+	qurl.init()
+	qurl.enqueue(targeturl)
 
 	regsrc=r'<img src=["]/(.*?.[jpg,png])["]'
 	regsrcname=r'.*/(.*.[jpg,png])'
@@ -43,7 +44,8 @@ def main(targeturl):
 	comregsrcname=re.compile(regsrcname)
 	comreglink=re.compile(reglink)
 	
-	url=surl.pop()
+	url=qurl.dequeue()
+	print url
 	ResourceUrlList = []
 	LinkList = []
 	while url!=None:
@@ -61,6 +63,6 @@ def main(targeturl):
 			f.write(data)
 			f.close()
 		for onelink in LinkList:
-			surl.push(hurl+onelink)	
-		url=surl.pop()
+			qurl.enqueue(hurl+onelink)	
+		url=qurl.dequeue()
 main(hurl)	
